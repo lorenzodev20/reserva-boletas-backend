@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class ReservationResource extends JsonResource
+class CustomerResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -14,16 +14,13 @@ class ReservationResource extends JsonResource
      */
     public function toArray($request)
     {
-        // Cargar Relaciones
-        $customer = new CustomerResource($this->loadCount('customer'));
-        $ticket = new CustomerResource($this->loadCount('ticket'));
-
+        // return parent::toArray($request);
         return [
             'id' => $this->id,
-            'quantity' => $this->quantity,
-            'customer' => $customer->customer,
-            'ticket' => $ticket->ticket,
-            'created' => $this->created_at
+            'identification' => $this->identification,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
+            'phone_number' => $this->phone_number
         ];
     }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\ReservationResource;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 
@@ -15,7 +16,8 @@ class ReservationController extends Controller
      */
     public function index()
     {
-        return Reservation::latest()->paginate();
+        // return Reservation::latest()->paginate();
+        return ReservationResource::collection(Reservation::with(['customer','ticket'])->paginate());
     }
 
     /**

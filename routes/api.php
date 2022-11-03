@@ -21,7 +21,7 @@ use App\Http\Controllers\Api\LoginController;
 Route::post('login', [LoginController::class, 'login']);
 
 Route::apiResource('v1/customers', App\Http\Controllers\Api\V1\CustomerController::class)
-    ->only('index', 'show', 'destroy')
+    ->only('index', 'store', 'show', 'destroy')
     ->middleware('auth:sanctum');
 
 Route::apiResource('v1/tickets', App\Http\Controllers\Api\V1\TicketController::class)

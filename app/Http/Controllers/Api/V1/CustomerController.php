@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Customer;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Http\Request;
+use App\Http\Requests\CustomerRequest;
 
 class CustomerController extends Controller
 {
@@ -26,9 +27,13 @@ class CustomerController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(CustomerRequest $request)
     {
-        //
+        $rps = Customer::create($request->validated());
+        if ($rps) {
+            return response()->json(['message' => 'Customer create succesfully', 'result' => $rps], 201);
+        }
+        return response()->json(['message' => 'Error to create customer', 'errors' => $rps], 500);
     }
 
     /**

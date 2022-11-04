@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api\V1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Customer;
 use App\Http\Resources\CustomerResource;
 use Illuminate\Http\JsonResponse;
@@ -29,44 +30,43 @@ class CustomerController extends Controller
      * @param CustomerRequest $request
      * @return JsonResponse
      */
-    public function store(CustomerRequest $request)
+    public function store(CustomerRequest $request): JsonResponse
     {
         $rps = Customer::create($request->validated());
         if ($rps) {
-            return response()->json(['message' => 'Customer create succesfully', 'result' => $rps], 201);
+            return response()->json(['result' => true, 'message' => 'Customer create succesfully', 'data' =>  $rps], 201);
         }
-        return response()->json(['message' => 'Error to create customer', 'errors' => $rps], 500);
+        return response()->json(['result'=> false, 'message' => 'Error to create customer', 'errors' => $rps], 500);
     }
 
     /**
      * Display the specified resource.
      *
      * @param Customer $customer
-     * @return Customer
+     * @return JsonResponse
      */
-    public function show(Customer $customer)
+    public function show(Customer $customer): JsonResponse
     {
-        return $customer;
+        return response()->json(['result' => true, 'message' => 'Customer exists', 'data' => $customer], 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param Customer $customer
+     * @param CustomerUpdateRequest $request
      * @param $id
      * @return JsonResponse
      */
-    public function update(Customer $customer, CustomerRequest $request, $id): JsonResponse
+    public function update(CustomerUpdateRequest $request, $id): JsonResponse
     {
-        $customerFind = Customer::find($id);
-
-        if (!$customerFind){
-            return response()->json(['message' => 'Customer not found', 'errors' => $customerFind], 404);
+        $rps = Customer::findOrFail($id)->update($request->all());
+        if (!$rps){
+            return response()->json(['message' => 'Customer not found', 'errors' => $rps], 404);
         }
-        /*if ($rps) {
-            return response()->json(['message' => 'Customer create succesfully', 'result' => $rps], 201);
-        }*/
-        return response()->json(['message' => 'Error to update customer', 'errors' => $customerFind], 500);
+        if ($rps){
+            return response()->json(['message' => 'Customer modified succesfully', 'result' => $rps], 201);
+        }
+        return response()->json(['message' => 'Error to update customer', 'errors' => $rps], 500);
     }
 
     /**
@@ -75,7 +75,7 @@ class CustomerController extends Controller
      * @param Customer $customer
      * @return JsonResponse
      */
-    public function destroy(Customer $customer)
+    public function destroy(Customer $customer): JsonResponse
     {
         $customer->delete();
         return response()->json(null, 204);

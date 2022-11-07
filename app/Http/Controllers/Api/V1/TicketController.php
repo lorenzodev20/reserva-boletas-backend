@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use App\Http\Requests\TicketRequest;
 use Illuminate\Http\Response;
 
 class TicketController extends Controller
@@ -23,12 +24,16 @@ class TicketController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param Request $request
-     * @return Response
+     * @param TicketRequest $request
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(TicketRequest $request): JsonResponse
     {
-        //
+        $rps = Ticket::create($request->validated());
+        if ($rps) {
+            return response()->json(['result' => true, 'message' => 'Ticket create succesfully', 'data' => $rps], 201);
+        }
+        return response()->json(['result' => false, 'message' => 'Error create to ticket', 'errors' => $rps], 500);
     }
 
     /**
@@ -45,13 +50,20 @@ class TicketController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param Request $request
-     * @param Ticket $ticket
-     * @return void
+     * @param TicketRequest $request
+     * @param $id
+     * @return JsonResponse
      */
-    public function update(Request $request, Ticket $ticket)
+    public function update(TicketRequest $request, $id): JsonResponse
     {
-        //
+        $rps = Ticket::findOrFail($id)->update($request->all());
+        if (!$rps) {
+            return response()->json(['message' => 'Ticket not found', 'errors' => $rps], 404);
+        }
+        if ($rps) {
+            return response()->json(['message' => 'Ticket modified succesfully', 'result' => $rps], 201);
+        }
+        return response()->json(['message' => 'Error to update ticket', 'errors' => $rps], 500);
     }
 
     /**

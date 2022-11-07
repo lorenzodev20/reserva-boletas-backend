@@ -25,8 +25,8 @@ Route::apiResource('v1/customers', App\Http\Controllers\Api\V1\CustomerControlle
     ->middleware('auth:sanctum');
 
 Route::apiResource('v1/tickets', App\Http\Controllers\Api\V1\TicketController::class)
-    ->only('index', 'show', 'destroy')
+    ->only('index', 'store', 'show', 'update', 'destroy')
     ->middleware('auth:sanctum');
 
 Route::apiResource('v1/reservations', App\Http\Controllers\Api\V1\ReservationController::class)
-    ->only('index');
+    ->only('index','store','show', 'update', 'destroy');

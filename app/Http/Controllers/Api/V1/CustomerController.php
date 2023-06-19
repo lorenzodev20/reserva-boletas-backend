@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Controllers\Controller;
-use App\Http\Requests\CustomerUpdateRequest;
 use App\Models\Customer;
-use App\Http\Resources\CustomerResource;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Http\JsonResponse;
+use App\Http\Controllers\Controller;
+use App\Exceptions\NotFoundException;
 use App\Http\Requests\CustomerRequest;
+use App\Http\Resources\CustomerResource;
+use App\Http\Requests\CustomerUpdateRequest;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class CustomerController extends Controller
@@ -36,7 +37,7 @@ class CustomerController extends Controller
         if ($rps) {
             return response()->json(['result' => true, 'message' => 'Customer create succesfully', 'data' =>  $rps], 201);
         }
-        return response()->json(['result'=> false, 'message' => 'Error to create customer', 'errors' => $rps], 500);
+        return response()->json(['result' => false, 'message' => 'Error to create customer', 'errors' => $rps], 500);
     }
 
     /**
@@ -45,8 +46,12 @@ class CustomerController extends Controller
      * @param Customer $customer
      * @return JsonResponse
      */
-    public function show(Customer $customer): JsonResponse
+    public function show(string $id): JsonResponse
     {
+        $customer = Customer::find($id);
+        if (!$customer) {
+            throw new NotFoundException();
+        }
         return response()->json(['result' => true, 'message' => 'Customer exists', 'data' => $customer], 200);
     }
 
@@ -60,10 +65,10 @@ class CustomerController extends Controller
     public function update(CustomerUpdateRequest $request, $id): JsonResponse
     {
         $rps = Customer::findOrFail($id)->update($request->all());
-        if (!$rps){
+        if (!$rps) {
             return response()->json(['message' => 'Customer not found', 'errors' => $rps], 404);
         }
-        if ($rps){
+        if ($rps) {
             return response()->json(['message' => 'Customer modified succesfully', 'result' => $rps], 201);
         }
         return response()->json(['message' => 'Error to update customer', 'errors' => $rps], 500);

@@ -21,7 +21,7 @@ class ReservationController extends Controller
     public function index()
     {
         // return Reservation::latest()->paginate();
-        return ReservationResource::collection(Reservation::with(['customer','ticket'])->paginate());
+        return ReservationResource::collection(Reservation::with(['customer','ticket'])->paginate(5));
     }
 
     /**

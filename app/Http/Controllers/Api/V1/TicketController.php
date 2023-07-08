@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
+use App\Http\Resources\TicketResource;
 use Illuminate\Http\Response;
 
 class TicketController extends Controller
@@ -18,7 +19,7 @@ class TicketController extends Controller
      */
     public function index()
     {
-        return Ticket::latest()->paginate();
+        return TicketResource::collection(Ticket::latest()->paginate(10));
     }
 
     /**

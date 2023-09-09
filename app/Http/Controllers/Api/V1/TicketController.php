@@ -7,6 +7,7 @@ use App\Models\Ticket;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Requests\TicketRequest;
+use App\Http\Resources\AllTicketsResource;
 use App\Http\Resources\TicketResource;
 use Illuminate\Http\Response;
 
@@ -77,5 +78,10 @@ class TicketController extends Controller
     {
         $ticket->delete();
         return response()->json(null, 204);
+    }
+
+    public function getList()
+    {
+        return AllTicketsResource::collection(Ticket::all());
     }
 }

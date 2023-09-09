@@ -6,6 +6,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CustomerList;
 use App\Exceptions\NotFoundException;
 use App\Http\Requests\CustomerRequest;
 use App\Http\Resources\CustomerResource;
@@ -83,5 +84,10 @@ class CustomerController extends Controller
     {
         $customer->delete();
         return response()->json("Customer deleted", 204);
+    }
+
+    public function getList()
+    {
+        return CustomerList::collection(Customer::all());
     }
 }

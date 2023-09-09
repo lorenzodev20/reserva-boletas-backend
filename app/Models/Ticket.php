@@ -9,7 +9,11 @@ class Ticket extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $table = 'tickets';
+
+    //protected $guarded = [];
+
+    protected $fillable = ['title','description','stock'];
 
     public function reservations()
     {
